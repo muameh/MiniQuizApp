@@ -1,6 +1,5 @@
 package com.mehmetbaloglu.bilgiyarismasi.components
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.RadioButton
@@ -71,20 +69,26 @@ fun QuestionDisplay(
     onFinalClicked: () -> Unit = {},
     viewModel: QuestionsViewModel
 ) {
-    var correctAnswerState = remember(question) {
+    val correctAnswerState = remember(question) {
         mutableStateOf<Boolean?>(null)
     }
 
-    var selectedChoiceIndex = remember(question) {
+    val selectedChoiceIndex = remember(question) {
         mutableIntStateOf(-1)
     }
 
-    var chociesList = remember(question) {
+    val chociesList = remember(question) {
         question.choices?.toMutableList()
     }
 
-    // Diyalog gösterim durumunu kontrol eden state
-    var showDialog = remember { mutableStateOf<Boolean?>(null) }
+    val showResult = remember { mutableStateOf<Boolean?>(null) }
+    val resultMessage = remember { mutableStateOf("") }
+
+    // Doğru cevap sayısını tutacak state
+    val correctAnswerCounter = remember { mutableStateOf(0) }
+
+    // Sorunun daha önce yanıtlanıp yanıtlanmadığını kontrol eden durum
+    val isAnswered = remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -108,37 +112,49 @@ fun QuestionDisplay(
                     verticalAlignment = Alignment.CenterVertically
 
                 ) {
-                    RadioButton(
-                        selected = 
-                        selectedChoiceIndex.intValue == index,
-                        onClick = {
-                        selectedChoiceIndex.intValue = index
-                        correctAnswerState.value = (selectedChoiceIndex.intValue == question.answersIndex)
-                        showDialog.value = true
-                            Log.d("CorrectAnswer", "correctAnswerState: ${correctAnswerState.value}")
-                            Log.d("CorrectAnswer", "answersIndex: ${question.answersIndex}")
-                            Log.d("CorrectAnswer", "selectedChoiceIndex: ${selectedChoiceIndex.intValue}")
+                    RadioButton(selected = selectedChoiceIndex.intValue == index, onClick = {
+                        if (!isAnswered.value) {
+                            selectedChoiceIndex.intValue = index
+                            correctAnswerState.value =
+                                (selectedChoiceIndex.intValue == question.answers_index)
 
+                            // Doğru cevap sayısını güncelle
+                            if (correctAnswerState.value == true) {
+                                correctAnswerCounter.value += 1
+                            }
+
+                            // Sonuç mesajını ayarla
+                            resultMessage.value = if (correctAnswerState.value == true) {
+                                "Tebrikler! Doğru cevabı bildiniz."
+                            } else {
+                                "Yanlış cevap! Doğru cevap: ${question.answer}"
+                            }
+
+                            showResult.value = true
+                            isAnswered.value = true // Soruyu daha önce cevaplanmış olarak işaretle
                         }
-                    )
+
+
+                    })
                     Text(text = choice.toString())
                 }
             }
+
             Button(modifier = Modifier.padding(8.dp), onClick = {
                 onNextClicked(currentQuestionIndex.value)
+                showResult.value = false // Sonuç gösterimini sıfırla
+                isAnswered.value = false // Sonraki soru için yanıt durumunu sıfırla
             }) {
                 Text(text = "Sonraki")
-
             }
-        }
-        // Eğer diyalog durumu aktifse CorrectAnswerDialog'u göster
-        if (showDialog.value == true) {
-            CorrectAnswerDialog(
-                question = question,
-                answersState = correctAnswerState
-            ) {
-                showDialog.value = false // Diyalog kapandığında durumu false yap
-                selectedChoiceIndex.intValue = -1 // Seçimi sıfırla
+
+            // Sonucu göster
+            if (showResult.value == true) {
+                Text(text = resultMessage.value, modifier = Modifier.padding(8.dp))
+                Text(
+                    text = "Doğru cevap sayınız: ${correctAnswerCounter.value}/${currentQuestionIndex.value + 1}",
+                    modifier = Modifier.padding(8.dp)
+                )
             }
         }
     }
@@ -146,33 +162,4 @@ fun QuestionDisplay(
 }
 
 
-@Composable
-fun CorrectAnswerDialog(
-    question: QuestionItem,
-    answersState: MutableState<Boolean?>,
-    onDismissRequest: () -> Unit
-) {
-    val correctAnswer = question.answersIndex?.let { question.choices?.get(it) } // Doğru cevabı al
-
-    AlertDialog(
-        onDismissRequest = onDismissRequest,
-        title = {
-            Text(text = if (answersState.value == true) "Tebrikler!" else "Yanlış!")
-        },
-        text = {
-            Text(
-                text = if (answersState.value == true) {
-                    "Doğru cevabı seçtiniz."
-                } else {
-                    "Doğru cevap:${question.answer}"
-                }
-            )
-        },
-        confirmButton = {
-            Button(onClick = onDismissRequest) {
-                Text("Tamam")
-            }
-        }
-    )
-}
 

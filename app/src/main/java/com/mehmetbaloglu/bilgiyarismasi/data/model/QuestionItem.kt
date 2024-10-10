@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 data class QuestionItem(
     val answer: String?,
-    val answersIndex: Int?,
+    val answers_index: Int?,
     val category: String?,
     val choices: List<String?>?,
     val question: String?
