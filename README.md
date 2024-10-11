@@ -3,11 +3,11 @@
 ![Screenshot_1728637582](https://github.com/user-attachments/assets/8ae46174-9d0c-4566-8e16-f33cd1062bbf)
 ![Screenshot_1728637622](https://github.com/user-attachments/assets/d8eb7c56-bc30-4d81-8537-8312fe80b8ce)
 
-# Trivia Quiz Application
+# Trivia Quiz Application (World History)
 
 ## Project Description
 
-This application allows users to test their knowledge by answering various questions in a trivia quiz format. With its user-friendly interface and interactive design, it makes trivia quizzes more enjoyable. The application dynamically fetches questions and answers from an API, providing a seamless experience.
+This application allows users to test their knowledge by answering various questions about World History in a trivia quiz format. With its user-friendly interface and interactive design, it makes trivia quizzes more enjoyable. The application dynamically fetches questions and answers from an API, providing a seamless experience.
 
 ## Features
 
