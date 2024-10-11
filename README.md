@@ -1,3 +1,8 @@
+![Screenshot_1728637570](https://github.com/user-attachments/assets/457eaa43-c64c-4875-b0b8-13f8d696d539)
+![Screenshot_1728637655](https://github.com/user-attachments/assets/288e9b2b-90d3-49d8-bbc8-868e2c19fd3b)
+![Screenshot_1728637582](https://github.com/user-attachments/assets/8ae46174-9d0c-4566-8e16-f33cd1062bbf)
+![Screenshot_1728637622](https://github.com/user-attachments/assets/d8eb7c56-bc30-4d81-8537-8312fe80b8ce)
+
 # Trivia Quiz Application
 
 ## Project Description
