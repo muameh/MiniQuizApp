@@ -30,8 +30,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mehmetbaloglu.bilgiyarismasi.R
 import com.mehmetbaloglu.bilgiyarismasi.data.model.QuestionItem
 import com.mehmetbaloglu.bilgiyarismasi.ui.viewmodels.QuestionsViewModel
 import com.mehmetbaloglu.bilgiyarismasi.utils.AppColors
@@ -81,7 +83,7 @@ fun Questions(viewModel: QuestionsViewModel) {
 fun QuestionTracker(counter: Int = 1, outOf: Int = 100) {
     Spacer(modifier = Modifier.height(30.dp))
     Text(
-        text = "Soru $counter / $outOf",
+        stringResource(R.string.question_tracker, counter, outOf),
         modifier = Modifier.padding(10.dp),
         color = AppColors.white,
         fontSize = 32.sp
@@ -210,7 +212,7 @@ fun QuestionDisplay(
                         showResult.value = false // Sonuç gösterimini sıfırla
                         isAnswered.value = false // Sonraki soru için yanıt durumunu sıfırla
                     }) {
-                    Text(text = "Sonraki")
+                    Text(text = "Next")
                 }
 
                 // Sonucu göster
@@ -222,12 +224,12 @@ fun QuestionDisplay(
                     ) {
                         Text(
                             text = resultMessage.value,
-                            color = if (resultMessage.value.startsWith("T")) Color.Green else Color.Red,
+                            color = if (resultMessage.value.startsWith("C")) Color.Green else Color.Red,
                             modifier = Modifier.align(Alignment.CenterHorizontally),
                             fontSize = 18.sp
                         )
                         Text(
-                            text = "Doğru cevap sayınız: ${correctAnswerCounter.value}/${currentQuestionIndex.value + 1}",
+                            text = "Correct Count: ${correctAnswerCounter.value}/${currentQuestionIndex.value + 1}",
                             color = AppColors.golden,
                             modifier = Modifier.align(Alignment.CenterHorizontally),
                             fontSize = 18.sp
@@ -251,8 +253,8 @@ fun FinalDialog(correctCount: Int, incorrectCount: Int) {
         ) {
             Text(text = "Quiz Tamamlandı!", fontSize = 24.sp)
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "Doğru Sayınız: $correctCount", fontSize = 18.sp)
-            Text(text = "Yanlış Sayınız: $incorrectCount", fontSize = 18.sp)
+            Text(text = "Correct Count: $correctCount", fontSize = 18.sp)
+            Text(text = "Incorrect Count: $incorrectCount", fontSize = 18.sp)
 
             Spacer(modifier = Modifier.height(24.dp)) // Add some space
 
@@ -261,7 +263,7 @@ fun FinalDialog(correctCount: Int, incorrectCount: Int) {
                 // Finish the activity
                 (context as? Activity)?.finish()
             }) {
-                Text(text = "Çıkış Yap") // Button text
+                Text(text = "Exit") // Button text
             }
         }
     }
@@ -293,9 +295,9 @@ private fun handleAnswerSelection(
 
         // Sonuç mesajını ayarla
         resultMessage.value = if (correctAnswerState.value == true) {
-            "Tebrikler! Doğru cevabı bildiniz."
+            "Congratulations! You answered correctly."
         } else {
-            "Yanlış cevap! Doğru cevap: ${question.answer}"
+            "Wrong answer! Correct answer: ${question.answer}"
         }
 
         showResult.value = true
@@ -303,7 +305,7 @@ private fun handleAnswerSelection(
     } else {
         Toast.makeText(
             context,
-            "Bu soru daha önce cevaplanmıştır.",
+            "You answered this question.",
             Toast.LENGTH_SHORT
         ).show()
     }
