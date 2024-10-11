@@ -30,7 +30,7 @@ This application allows users to test their knowledge by answering various quest
 
 1. **Project Code:** Clone or download this project.
     ```bash
-    git clone https://github.com/your_username/trivia_quiz.git
+    git clone https://github.com/muameh/MiniQuizApp
     ```
 
 2. **Open Android Studio:** Open the project in Android Studio.
