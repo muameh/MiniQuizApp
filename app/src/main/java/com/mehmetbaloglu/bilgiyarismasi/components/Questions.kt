@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
@@ -118,12 +119,13 @@ fun QuestionDisplay(
     val context = LocalContext.current // Mevcut Context'i al
 
     Surface(
-        modifier = Modifier.fillMaxSize(), color = AppColors.back_ground_color
+        modifier = Modifier.fillMaxSize(),
+        color = AppColors.back_ground_color
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
 
             ) {
             QuestionTracker(
@@ -146,7 +148,7 @@ fun QuestionDisplay(
                 Spacer(modifier = Modifier.height(20.dp))
                 choicesList?.forEachIndexed { index, choice ->
                     Row(
-                        modifier = Modifier.height(32.dp),
+                        modifier = Modifier.padding(2.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         RadioButton(
@@ -174,8 +176,12 @@ fun QuestionDisplay(
                         )
                         Text(
                             text = choice.toString(),
-                            color = AppColors.white,
-                            fontSize = 18.sp,
+                            color = when {
+                                selectedChoiceIndex.intValue == index && correctAnswerState.value == true -> Color.Green
+                                selectedChoiceIndex.intValue == index && correctAnswerState.value == false -> Color.Red
+                                else -> AppColors.white
+                            },
+                            fontSize = 20.sp,
                             modifier = Modifier.clickable {
                                 handleAnswerSelection(
                                     index,
@@ -195,13 +201,15 @@ fun QuestionDisplay(
                     }
                 }
 
-                Button(modifier = Modifier
-                    .padding(8.dp, 8.dp, 8.dp, 18.dp)
-                    .align(Alignment.CenterHorizontally), onClick = {
-                    onNextClicked(currentQuestionIndex.value)
-                    showResult.value = false // Sonuç gösterimini sıfırla
-                    isAnswered.value = false // Sonraki soru için yanıt durumunu sıfırla
-                }) {
+                Button(
+                    modifier = Modifier
+                        .padding(8.dp, 8.dp, 8.dp, 18.dp)
+                        .align(Alignment.CenterHorizontally),
+                    onClick = {
+                        onNextClicked(currentQuestionIndex.value)
+                        showResult.value = false // Sonuç gösterimini sıfırla
+                        isAnswered.value = false // Sonraki soru için yanıt durumunu sıfırla
+                    }) {
                     Text(text = "Sonraki")
                 }
 
@@ -215,12 +223,14 @@ fun QuestionDisplay(
                         Text(
                             text = resultMessage.value,
                             color = if (resultMessage.value.startsWith("T")) Color.Green else Color.Red,
-                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                            modifier = Modifier.align(Alignment.CenterHorizontally),
+                            fontSize = 18.sp
                         )
                         Text(
                             text = "Doğru cevap sayınız: ${correctAnswerCounter.value}/${currentQuestionIndex.value + 1}",
                             color = AppColors.golden,
-                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                            modifier = Modifier.align(Alignment.CenterHorizontally),
+                            fontSize = 18.sp
                         )
                     }
                 }
